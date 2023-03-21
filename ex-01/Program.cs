@@ -5,9 +5,9 @@
     return text.Substring(offset);
 }
 
-static String NumberToText(int numberToConvert)
+static String NumberToText(long numberToConvert)
 {
-    int absoluteNumber = Math.Abs(numberToConvert);
+    long absoluteNumber = Math.Abs(numberToConvert);
     String number = absoluteNumber.ToString();
 
     if (absoluteNumber < 20)
@@ -24,34 +24,34 @@ static String NumberToText(int numberToConvert)
             string[] hundreds = { "cem", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos" };
             string[][] numberSets = { tens, hundreds };
 
-            int digit = number.Length - i;
-            string currentText = numberSets[digit - 2][int.Parse(number[i].ToString()) - 1];
-            int rest = int.Parse(number.ToString().Remove(0, 1));
+            long digit = number.Length - i;
+            string currentText = numberSets[digit - 2][long.Parse(number[i].ToString()) - 1];
+            long rest = long.Parse(number.ToString().Remove(0, 1));
             string connector = digit < 4 ? " e " : " ";
             string nextNumber = rest > 0 ? connector + NumberToText(rest) : " ";
             return currentText + nextNumber;
         }
     }
 
-    Dictionary<int, string[]> bigNumberDictionary = new Dictionary<int, string[]>();
+    Dictionary<long, string[]> bigNumberDictionary = new Dictionary<long, string[]>();
     bigNumberDictionary.Add(7, new string[] { " mil", "mil" });
     bigNumberDictionary.Add(10, new string[] { " milhões", "um milhão" });
     bigNumberDictionary.Add(13, new string[] { " bilhões", "um bilhão" });
     bigNumberDictionary.Add(16, new string[] { " trilhões", "um trilhão" });
 
-    int[] supportedNumbers = { (int)Math.Pow(10, 3), (int)Math.Pow(10, 6), (int)Math.Pow(10, 9), (int)Math.Pow(10, 12) };
+    long[] supportedNumbers = { (long)Math.Pow(10, 3), (long)Math.Pow(10, 6), (long)Math.Pow(10, 9), (long)Math.Pow(10, 12) };
 
-    foreach (int supportedNumber in supportedNumbers)
+    foreach (long supportedNumber in supportedNumbers)
     {
-        int supportedNumberMaxLength = supportedNumber.ToString().Length + 3;
+        long supportedNumberMaxLength = supportedNumber.ToString().Length + 3;
         if (number.Length < supportedNumberMaxLength)
         {
-            int currentNumericalUnity = (int)(absoluteNumber / supportedNumber);
+            long currentNumericalUnity = (long)(absoluteNumber / supportedNumber);
 
             string currentNumericalUnityText = currentNumericalUnity > 1
                 ? NumberToText(currentNumericalUnity) + bigNumberDictionary.GetValueOrDefault(supportedNumberMaxLength)[0]
                 : bigNumberDictionary.GetValueOrDefault(supportedNumberMaxLength)[1];
-            int rest = int.Parse(getLastCharacters(number, 3));
+            long rest = long.Parse(getLastCharacters(number, 3));
             string connector = rest > 0 && rest < 1000 ? " e " : " ";
 
             string nextNumber = rest > 0 ? connector + NumberToText(rest) : "";
@@ -69,4 +69,4 @@ Console.WriteLine("Type ya numba");
 String number = Console.ReadLine();
 
 
-Console.WriteLine(NumberToText(int.Parse(number)));
+Console.WriteLine(NumberToText(long.Parse(number)));
