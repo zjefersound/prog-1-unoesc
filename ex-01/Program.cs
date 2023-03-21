@@ -21,11 +21,11 @@ static String NumberToText(long numberToConvert)
         for (int i = 0; i < number.Length - 1; i++)
         {
             string[] tens = { "", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "setenta", "oitenta", "noventa" };
-            string[] hundreds = { "cem", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos" };
+            string[] hundreds = { "cento", "duzentos", "trezentos", "quatrocentos", "quinhentos", "seiscentos", "setecentos", "oitocentos", "novecentos" };
             string[][] numberSets = { tens, hundreds };
 
             long digit = number.Length - i;
-            string currentText = numberSets[digit - 2][long.Parse(number[i].ToString()) - 1];
+            string currentText = digit - 2 == 1 && long.Parse(number[i].ToString()) - 1 == 0 ? "cem" : numberSets[digit - 2][long.Parse(number[i].ToString()) - 1];
             long rest = long.Parse(number.ToString().Remove(0, 1));
             string connector = digit < 4 ? " e " : " ";
             string nextNumber = rest > 0 ? connector + NumberToText(rest) : " ";
@@ -47,6 +47,11 @@ static String NumberToText(long numberToConvert)
         if (number.Length < supportedNumberMaxLength)
         {
             long currentNumericalUnity = (long)(absoluteNumber / supportedNumber);
+
+            if (bigNumberDictionary.GetValueOrDefault(supportedNumberMaxLength)?.Length < 2)
+            {
+                return "";
+            }
 
             string currentNumericalUnityText = currentNumericalUnity > 1
                 ? NumberToText(currentNumericalUnity) + bigNumberDictionary.GetValueOrDefault(supportedNumberMaxLength)[0]
