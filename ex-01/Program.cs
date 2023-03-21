@@ -48,11 +48,6 @@ static String NumberToText(long numberToConvert)
         {
             long currentNumericalUnity = (long)(absoluteNumber / supportedNumber);
 
-            if (bigNumberDictionary.GetValueOrDefault(supportedNumberMaxLength)?.Length < 2)
-            {
-                return "";
-            }
-
             string currentNumericalUnityText = currentNumericalUnity > 1
                 ? NumberToText(currentNumericalUnity) + bigNumberDictionary.GetValueOrDefault(supportedNumberMaxLength)[0]
                 : bigNumberDictionary.GetValueOrDefault(supportedNumberMaxLength)[1];
