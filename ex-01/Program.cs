@@ -5,9 +5,18 @@
     return text.Substring(offset);
 }
 
-static String NumberToText(long numberToConvert)
+static String NumberToText(double numberToConvert)
 {
-    long absoluteNumber = Math.Abs(numberToConvert);
+    Dictionary<long, string[]> bigNumberDictionary = new Dictionary<long, string[]>();
+    bigNumberDictionary.Add(7, new string[] { " mil", "mil" });
+    bigNumberDictionary.Add(10, new string[] { " milhões", "um milhão" });
+    bigNumberDictionary.Add(13, new string[] { " bilhões", "um bilhão" });
+    bigNumberDictionary.Add(16, new string[] { " trilhões", "um trilhão" });
+
+    long[] supportedNumbers = { (long)Math.Pow(10, 3), (long)Math.Pow(10, 6), (long)Math.Pow(10, 9), (long)Math.Pow(10, 12) };
+
+
+    long absoluteNumber = Math.Abs(Convert.ToInt64(Math.Truncate(numberToConvert)));
     String number = absoluteNumber.ToString();
 
     if (absoluteNumber < 20)
@@ -33,14 +42,6 @@ static String NumberToText(long numberToConvert)
         }
     }
 
-    Dictionary<long, string[]> bigNumberDictionary = new Dictionary<long, string[]>();
-    bigNumberDictionary.Add(7, new string[] { " mil", "mil" });
-    bigNumberDictionary.Add(10, new string[] { " milhões", "um milhão" });
-    bigNumberDictionary.Add(13, new string[] { " bilhões", "um bilhão" });
-    bigNumberDictionary.Add(16, new string[] { " trilhões", "um trilhão" });
-
-    long[] supportedNumbers = { (long)Math.Pow(10, 3), (long)Math.Pow(10, 6), (long)Math.Pow(10, 9), (long)Math.Pow(10, 12) };
-
     foreach (long supportedNumber in supportedNumbers)
     {
         long supportedNumberMaxLength = supportedNumber.ToString().Length + 3;
@@ -63,10 +64,21 @@ static String NumberToText(long numberToConvert)
 
 }
 
+static String DecimalNumberToText(double numberToConvert)
+{
+    long absoluteNumber = Math.Abs(Convert.ToInt64(Math.Truncate(numberToConvert)));
+    int decimalNumber = Convert.ToInt32(Math.Truncate((numberToConvert - Math.Truncate(numberToConvert)) * 100));
+    string absoluteNumberText = NumberToText(absoluteNumber);
+    string decimalNumberText = decimalNumber > 0 ? NumberToText(decimalNumber) : "";
+    string connector = decimalNumber > 0 ? " virgula " : "";
+
+    return absoluteNumberText + connector + decimalNumberText;
+}
+
 
 
 Console.WriteLine("Type ya numba");
 String number = Console.ReadLine();
 
 
-Console.WriteLine(NumberToText(long.Parse(number)));
+Console.WriteLine(DecimalNumberToText(double.Parse(number)));
